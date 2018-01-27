@@ -13,6 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'groovy'
 
 group = 'com.transquiz'
 version = '0.0.1-SNAPSHOT'
@@ -22,6 +23,21 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets {
+    main {
+        groovy {
+            // this makes the groovy-compiler compile groovy- as well
+            // as java-files.
+            // Needed, because java is normally compiled before groovy.
+            // Since we are using groovy objects from java, we need it
+            // the other way round.
+            srcDirs = ['src/main/groovy', 'src/main/java']
+        }
+        java {
+            srcDirs = [] // don't compile Java code twice
+        }
+    }
+}
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -31,6 +47,5 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
-	compile group: 'org.json', name: 'json', version: '20160810'
-
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.5'
 }
