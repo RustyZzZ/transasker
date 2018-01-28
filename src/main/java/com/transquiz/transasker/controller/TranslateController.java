@@ -4,7 +4,7 @@ import com.transquiz.transasker.model.Word;
 import com.transquiz.transasker.service.TranslatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
@@ -23,8 +23,8 @@ public class TranslateController {
         this.translatorServiceImpl = translatorServiceImpl;
     }
 
-    @GetMapping("/translate/{word}")
-    public List<Word> translateTo(@PathVariable String word) {
+    @GetMapping("/translate")
+    public List<Word> translateTo(@RequestParam String word) {
         try {
             return translatorServiceImpl.callUrlAndParseResult(langFrom, langTo, word);
         } catch (Exception e) {
