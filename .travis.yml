@@ -3,3 +3,8 @@ before_install:
 - chmod +x gradlew
 jdk:
 - oraclejdk8
+env:
+  global:
+    -JDBC_DATABASE_URL=jdbc:postgresql
+    -JDBC_DATABASE_USERNAME=postgres
+    -JDBC_DATABASE_PASSWORD=postgres
