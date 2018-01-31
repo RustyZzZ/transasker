@@ -1,0 +1,13 @@
+package com.transquiz.transasker.service;
+
+import com.transquiz.transasker.model.Profile;
+import com.transquiz.transasker.model.Word;
+import com.transquiz.transasker.model.security.User;
+
+import java.util.Set;
+
+public interface ProfileService {
+    Profile getProfileByUser(User user);
+
+    Profile addWordsToProfileAndUpdateProfile(Profile profile, Set<Word> words);
+}

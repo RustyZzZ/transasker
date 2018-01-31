@@ -1,7 +1,9 @@
 package com.transquiz.transasker.controller;
 
-import com.transquiz.transasker.model.Word;
+import com.transquiz.transasker.Dto.WordDto;
+import com.transquiz.transasker.model.Languages;
 import com.transquiz.transasker.service.TranslatorService;
+import com.transquiz.transasker.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,19 +16,18 @@ import java.util.List;
 public class TranslateController {
 
     private final TranslatorService translatorServiceImpl;
-
-    private static final String langTo = "ru";
-    private static final String langFrom = "en";
+    private final WordService wordService;
 
     @Autowired
-    public TranslateController(TranslatorService translatorServiceImpl) {
+    public TranslateController(TranslatorService translatorServiceImpl, WordService wordService) {
         this.translatorServiceImpl = translatorServiceImpl;
+        this.wordService = wordService;
     }
 
     @GetMapping("/translate")
-    public List<Word> translateTo(@RequestParam String word) {
+    public List<WordDto> translateTo(@RequestParam String word) {
         try {
-            return translatorServiceImpl.callUrlAndParseResult(langFrom, langTo, word);
+            return wordService.getWordTranslation(word, Languages.EN, Languages.RU);
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();

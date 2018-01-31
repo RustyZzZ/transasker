@@ -13,7 +13,10 @@ class JsonWordParser {
         String srcWord = alternativeTranslations["src_phrase"][0]
         def listOfWord = alternativeTranslations[0]["alternative"]
         listOfWord.each {
-            def word = new Word(srcWord, it["word_postproc"] as String)
+            def word = Word.builder()
+                    .sourceWord(srcWord)
+                    .targetWord(it["word_postproc"] as String)
+                    .build()
             listOfWords.add(word)
         }
         listOfWords
