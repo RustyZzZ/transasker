@@ -16,7 +16,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'groovy'
 
 group = 'com.transquiz'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.5-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -48,4 +48,7 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
     compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.5'
+	compile group: 'org.modelmapper', name: 'modelmapper', version: '1.1.0'
+	compile 'com.google.guava:guava:23.6-jre'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
 }
