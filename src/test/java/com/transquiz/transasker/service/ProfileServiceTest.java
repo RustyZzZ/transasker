@@ -46,8 +46,16 @@ public class ProfileServiceTest {
                 .toLang(Languages.RU)
                 .build();
         Profile userProfile = Profile.builder().tgUsername("Admin").user(user).words(new HashSet<>()).build();
-        Profile updatedUserProfile = Profile.builder().tgUsername("Admin").user(user).words(Sets.newHashSet(word)).build();
-        Profile doubleWordUserProfile = Profile.builder().tgUsername("Admin").user(user).words(Sets.newHashSet(word, word1)).build();
+        Profile updatedUserProfile = Profile.builder()
+                .tgUsername("Admin")
+                .user(user)
+                .words(Sets.newHashSet(word))
+                .build();
+        Profile doubleWordUserProfile = Profile.builder()
+                .tgUsername("Admin")
+                .user(user)
+                .words(Sets.newHashSet(word, word1))
+                .build();
 
 
         Mockito.when(ProfileServiceImplTestContextConfiguration.profileRepository.getProfileByUser(userProfile.getUser()))

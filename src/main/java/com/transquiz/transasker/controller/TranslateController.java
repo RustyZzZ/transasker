@@ -1,6 +1,6 @@
 package com.transquiz.transasker.controller;
 
-import com.transquiz.transasker.Dto.WordDto;
+import com.transquiz.transasker.dto.WordDto;
 import com.transquiz.transasker.model.Languages;
 import com.transquiz.transasker.service.TranslatorService;
 import com.transquiz.transasker.service.WordService;

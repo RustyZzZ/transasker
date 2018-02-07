@@ -1,13 +1,13 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.9.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '1.5.9.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
@@ -20,7 +20,7 @@ version = '0.0.5-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 sourceSets {
@@ -40,15 +40,15 @@ sourceSets {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	runtime('org.postgresql:postgresql')
-	compileOnly('org.projectlombok:lombok')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.security:spring-security-test')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    runtime('org.postgresql:postgresql')
+    compileOnly('org.projectlombok:lombok')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
     compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.5'
-	compile group: 'org.modelmapper', name: 'modelmapper', version: '1.1.0'
-	compile 'com.google.guava:guava:23.6-jre'
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '1.1.0'
+    compile 'com.google.guava:guava:23.6-jre'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
 }
