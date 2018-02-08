@@ -8,6 +8,7 @@ import com.transquiz.transasker.model.security.User;
 import com.transquiz.transasker.repository.ProfileRepository;
 import com.transquiz.transasker.service.impls.ProfileServiceImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

@@ -9,6 +9,7 @@ import com.transquiz.transasker.model.security.User;
 import com.transquiz.transasker.repository.WordRepository;
 import com.transquiz.transasker.service.impls.WordServiceImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,7 +28,7 @@ import java.util.List;
 
 import static com.transquiz.transasker.service.WordServiceTest.WordServiceImplTestContextConfiguration.*;
 import static org.assertj.core.api.Assertions.assertThat;
-
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class WordServiceTest {
