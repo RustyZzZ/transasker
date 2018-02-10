@@ -1,4 +1,4 @@
-package com.transquiz.transasker.Dto;
+package com.transquiz.transasker.dto;
 
 import lombok.Data;
 

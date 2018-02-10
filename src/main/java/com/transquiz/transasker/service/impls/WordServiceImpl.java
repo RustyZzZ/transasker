@@ -1,6 +1,6 @@
 package com.transquiz.transasker.service.impls;
 
-import com.transquiz.transasker.Dto.WordDto;
+import com.transquiz.transasker.dto.WordDto;
 import com.transquiz.transasker.model.Languages;
 import com.transquiz.transasker.model.Profile;
 import com.transquiz.transasker.model.Word;
@@ -56,6 +56,30 @@ public class WordServiceImpl implements WordService {
             wordsForDatabase = enhanceListOfWords(langFrom, langTo, resultWords);
         }
         profileService.addWordsToProfileAndUpdateProfile(profileByUser, new HashSet<>(wordsForDatabase));
+        return modelMapper.map(resultWords, listType);
+    }
+
+    @Transactional
+    @Override
+    public List<WordDto> getWordTranslation(String word, Languages langFrom, Languages langTo, String telegramName, int chatId) throws Exception {
+        Profile profileByUser = profileService.getProfileByTelegramUsername(telegramName, chatId);
+        List<Word> resultWords = wordRepository.getWordsBySourceWordIgnoreCase(word);
+        List<Word> wordsForDatabase = resultWords;
+        if (CollectionUtils.isEmpty(resultWords)) {
+            resultWords = translatorService.callUrlAndParseResult(langFrom, langTo, word.toLowerCase());
+            wordsForDatabase = enhanceListOfWords(langFrom, langTo, resultWords);
+        }
+        profileService.addWordsToProfileAndUpdateProfile(profileByUser, new HashSet<>(wordsForDatabase));
+        return modelMapper.map(resultWords, listType);
+    }
+
+    @Transactional
+    @Override
+    public List<WordDto> getWordTranslationPublic(String text, Languages langFrom, Languages langTo) throws Exception {
+        List<Word> resultWords = wordRepository.getWordsBySourceWordIgnoreCase(text);
+        if (CollectionUtils.isEmpty(resultWords)) {
+            resultWords = translatorService.callUrlAndParseResult(langFrom, langTo, text.toLowerCase());
+        }
         return modelMapper.map(resultWords, listType);
     }
 

@@ -1,6 +1,6 @@
 package com.transquiz.transasker.controller;
 
-import com.transquiz.transasker.Dto.UserDto;
+import com.transquiz.transasker.dto.UserDto;
 import com.transquiz.transasker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

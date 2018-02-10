@@ -1,5 +1,6 @@
 package com.transquiz.transasker.service.impls;
 
+import com.google.common.collect.Sets;
 import com.transquiz.transasker.model.Profile;
 import com.transquiz.transasker.model.Word;
 import com.transquiz.transasker.model.security.User;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,8 +28,18 @@ public class ProfileServiceImpl implements ProfileService {
         return !Objects.isNull(profileByUser) ? profileByUser : getNewProfile(user);
     }
 
+    @Override
+    public Profile getProfileByTelegramUsername(String username, int chatId) {
+        Profile profileByUser = profileRepository.getProfileByTgUsername(username);
+        return !Objects.isNull(profileByUser) ? profileByUser : getNewProfile(username, chatId);
+    }
+
+    private Profile getNewProfile(String username, int chatId) {
+        return Profile.builder().tgUsername(username).words(Sets.newHashSet()).tgPrivateChatId(chatId).build();
+    }
+
     private Profile getNewProfile(User user) {
-        return Profile.builder().user(user).words(new HashSet<>()).build();
+        return Profile.builder().user(user).words(Sets.newHashSet()).build();
     }
 
     @Override

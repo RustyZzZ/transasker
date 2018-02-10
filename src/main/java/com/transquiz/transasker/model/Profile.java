@@ -24,6 +24,8 @@ public class Profile {
 
     private String tgUsername;
 
+    private Integer tgPrivateChatId;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "profile_words", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "word_id"))
     private Set<Word> words;

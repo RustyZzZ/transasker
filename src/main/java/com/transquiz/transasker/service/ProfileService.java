@@ -9,5 +9,7 @@ import java.util.Set;
 public interface ProfileService {
     Profile getProfileByUser(User user);
 
+    Profile getProfileByTelegramUsername(String username, int chatId);
+
     Profile addWordsToProfileAndUpdateProfile(Profile profile, Set<Word> words);
 }
