@@ -66,7 +66,7 @@ public class AnswerServiceImpl implements AnswerService {
         return stringBuilder.toString();
     }
 
-    private Message sendMessage(int chat_id, String text) {
+    public Message sendMessage(int chat_id, String text) {
         String url = telegramUrl + buildMessage(chat_id, text);
         return restTemplate.getForObject(url, Message.class);
 

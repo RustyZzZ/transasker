@@ -8,7 +8,7 @@ public class MessageEntity {
     @JsonProperty("type")
     private String type;
     @JsonProperty("offset")
-    private int offset;
+    private int offseit;
     @JsonProperty("length")
     private int length;
     @JsonProperty("url")

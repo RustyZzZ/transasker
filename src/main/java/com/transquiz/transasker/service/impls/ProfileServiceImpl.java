@@ -34,8 +34,18 @@ public class ProfileServiceImpl implements ProfileService {
         return !Objects.isNull(profileByUser) ? profileByUser : getNewProfile(username, chatId);
     }
 
+    @Override
+    public Profile getProfileByTelegramUsernameWithoutChatId(String username) {
+        Profile profileByUser = profileRepository.getProfileByTgUsername(username);
+        return !Objects.isNull(profileByUser) ? profileByUser : getNewProfile(username);
+    }
+
+    private Profile getNewProfile(String username) {
+        return Profile.builder().mode("translate").tgUsername(username).words(Sets.newHashSet()).build();
+    }
+
     private Profile getNewProfile(String username, int chatId) {
-        return Profile.builder().tgUsername(username).words(Sets.newHashSet()).tgPrivateChatId(chatId).build();
+        return Profile.builder().mode("translate").tgUsername(username).words(Sets.newHashSet()).tgPrivateChatId(chatId).build();
     }
 
     private Profile getNewProfile(User user) {

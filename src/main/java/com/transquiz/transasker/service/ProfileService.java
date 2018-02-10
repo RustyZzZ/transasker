@@ -12,4 +12,6 @@ public interface ProfileService {
     Profile getProfileByTelegramUsername(String username, int chatId);
 
     Profile addWordsToProfileAndUpdateProfile(Profile profile, Set<Word> words);
+
+    Profile getProfileByTelegramUsernameWithoutChatId(String telegramName);
 }

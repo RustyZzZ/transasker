@@ -6,4 +6,6 @@ public interface AnswerService {
     Message translateWordForPrivateTgUser(int chatId, String text, String tgUsername);
 
     Message translateWordForPublic(int chatId, String text);
+
+    Message sendMessage(int chat_id, String text);
 }

@@ -29,4 +29,8 @@ public class Profile {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "profile_words", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "word_id"))
     private Set<Word> words;
+
+    private String mode;
+
+
 }

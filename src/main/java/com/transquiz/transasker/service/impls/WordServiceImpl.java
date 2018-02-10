@@ -102,4 +102,5 @@ public class WordServiceImpl implements WordService {
                 .toLang(w.getFromLang())
                 .build();
     }
+
 }
