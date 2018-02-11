@@ -13,6 +13,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.transquiz.transasker.util.Constants.Modes;
+
 @Service
 public class ProfileServiceImpl implements ProfileService {
 
@@ -40,12 +42,26 @@ public class ProfileServiceImpl implements ProfileService {
         return !Objects.isNull(profileByUser) ? profileByUser : getNewProfile(username);
     }
 
+    @Override
+    public String getModeByProfile(String username) {
+        return profileRepository.getProfileByTgUsername(username).getMode();
+    }
+
+
+    @Override
+    public Profile setModeOfProfile(String tgUsername, String mode) {
+        Profile profile = getProfileByTelegramUsernameWithoutChatId(tgUsername);
+        profile.setMode(mode);
+        return profileRepository.save(profile);
+    }
+
+
     private Profile getNewProfile(String username) {
-        return Profile.builder().mode("translate").tgUsername(username).words(Sets.newHashSet()).build();
+        return Profile.builder().mode(Modes.TRANSLATE).tgUsername(username).words(Sets.newHashSet()).build();
     }
 
     private Profile getNewProfile(String username, int chatId) {
-        return Profile.builder().mode("translate").tgUsername(username).words(Sets.newHashSet()).tgPrivateChatId(chatId).build();
+        return Profile.builder().mode(Modes.TRANSLATE).tgUsername(username).words(Sets.newHashSet()).tgPrivateChatId(chatId).build();
     }
 
     private Profile getNewProfile(User user) {

@@ -11,7 +11,11 @@ public interface ProfileService {
 
     Profile getProfileByTelegramUsername(String username, int chatId);
 
+    Profile setModeOfProfile(String tgUsername, String mode);
+
     Profile addWordsToProfileAndUpdateProfile(Profile profile, Set<Word> words);
 
     Profile getProfileByTelegramUsernameWithoutChatId(String telegramName);
+
+    String getModeByProfile(String username);
 }

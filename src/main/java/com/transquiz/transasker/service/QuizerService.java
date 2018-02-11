@@ -6,10 +6,11 @@ import java.util.Set;
 
 public interface QuizerService {
 
-    public Set<Word> getQuizWordsForProfileByTelegramName(String telegramName);
+    Set<Word> getQuizWordsForProfileByTelegramName(String telegramName);
 
-    public boolean isUsersAnswerCorrect(String source, String answer);
+    Word getRandomQuizWordForTelegramName(String telegramName);
 
-    public Word getRandomQuizWordForTelegramName(String telegramName);
+    boolean processAnswer(String tgUsername, String previousAnswer);
 
+    Word getCurrentWord(String tgUsername);
 }

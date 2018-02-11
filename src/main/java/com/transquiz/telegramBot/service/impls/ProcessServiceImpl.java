@@ -2,8 +2,9 @@ package com.transquiz.telegramBot.service.impls;
 
 import com.transquiz.telegramBot.model.*;
 import com.transquiz.telegramBot.service.AnswerService;
+import com.transquiz.telegramBot.service.CommandService;
 import com.transquiz.telegramBot.service.ProcessService;
-import com.transquiz.transasker.model.Profile;
+import com.transquiz.transasker.model.Word;
 import com.transquiz.transasker.service.ProfileService;
 import com.transquiz.transasker.service.QuizerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,83 +14,130 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.Objects;
 
+import static com.transquiz.transasker.util.Constants.Commands;
+import static com.transquiz.transasker.util.Constants.Modes;
+
 @Service
 public class ProcessServiceImpl implements ProcessService {
     private final AnswerService answerService;
+    private final ProfileService profileService;
+    private final CommandService commandService;
+    private final QuizerService quizerService;
 
     @Autowired
-    public ProcessServiceImpl(AnswerService answerService) {
+    public ProcessServiceImpl(AnswerService answerService, ProfileService profileService, CommandService commandService, QuizerService quizerService) {
         this.answerService = answerService;
+        this.profileService = profileService;
+        this.commandService = commandService;
+        this.quizerService = quizerService;
     }
 
-    @Autowired
-    private ProfileService profileService;
-
-    @Autowired
-    QuizerService quizerService;
-
     @Override
-    public ApiResult<Message> processUpdate(Update update) {
+    public void processUpdate(Update update) {
         Message message = update.getMessage();
         List<MessageEntity> entities = message.getEntities();
-        ApiResult<Message> messageApiResult;
-        BotUser fromUser = message.getFrom();
-        Chat chat = message.getChat();
-        Profile profile = profileService.getProfileByTelegramUsername(fromUser.getUsername(), chat.getId());
         if (CollectionUtils.isEmpty(entities)) {
-            messageApiResult = translateWordFromMessageForUser(message);
+            processByMode(message);
         } else {
             MessageEntity command = entities.stream()
                     .filter(s -> s.getType().equals("bot_command"))
                     .findAny()
                     .orElse(null);
             if (command != null) {
-                String messageText = message.getText();
-                String commandText = messageText.substring(command.getOffseit(), command.getLength());
-                switch (commandText) {
-                    case "/quiz": {
-                        profile.setMode("quiz");
-                        answerService.sendMessage(chat.getId(), "Переведи мне это слово" + quizerService
-                                .getRandomQuizWordForTelegramName(fromUser.getUsername()));
-                        break;
-                    }
-                    case "/quit": {
-                        profile.setMode("translate");
-                        break;
-                    }
-                    case "/next": {
-                        //TBD
-                        break;
-                    }
-                    case "/answer": {
-                        //TBD
-                        break;
-                    }
-                    default: {
-                        answerService.sendMessage(chat.getId(), "sry bro((((");
-                    }
-                }
-                messageApiResult = new ApiResult<>();//TBD
+                processCommand(command, message);
             } else {
-                messageApiResult = new ApiResult<>();
+                //TBD entity, but not command
             }
         }
-        return messageApiResult;
+
     }
 
-    private ApiResult<Message> translateWordFromMessageForUser(Message message) {
-        ApiResult<Message> messageApiResult = new ApiResult<>();
+    private void processByMode(Message message) {
+        String tgUsername = message.getFrom().getUsername();
+        switch (profileService.getModeByProfile(tgUsername)) {
+            case Modes.TRANSLATE: {
+                translateWordFromMessageForUser(message);
+                break;
+            }
+            case Modes.QUIZ: {
+                processQuiz(message);
+                break;
+            }
+            default: {
+                //TBD Unknown mode
+            }
+        }
+    }
+
+    private void processQuiz(Message message) {
+        String tgUsername = message.getFrom().getUsername();
+        String previousAnswer = message.getText();
+        boolean wasAnswerCorrect = quizerService.processAnswer(tgUsername, previousAnswer);
+        Word wordToAsk;
+        if (!wasAnswerCorrect) {
+            wordToAsk = quizerService.getCurrentWord(tgUsername);
+            if (wordToAsk == null) {
+                forgotWord(message);
+                return;
+            }
+        } else {
+            wordToAsk = quizerService.getRandomQuizWordForTelegramName(tgUsername);
+        }
+        answerService.askWord(message.getChat().getId(), wordToAsk, wasAnswerCorrect, false);
+    }
+
+    private void forgotWord(Message message) {
+        String tgUsername = message.getFrom().getUsername();
+        profileService.setModeOfProfile(tgUsername, Modes.TRANSLATE);
+        answerService.sendMessage(message.getChat()
+                .getId(), "Извини, я по каким-то причинам забыл что тебя спросил. " +
+                "По этому я вернулся в режим переводчика." +
+                " Если хочешь может опять начать просто написав /quiz");
+    }
+
+    private void processCommand(MessageEntity command, Message message) {
+        String messageText = message.getText();
+        String commandText = messageText.substring(command.getOffseit(), command.getLength());
+        BotUser fromUser = message.getFrom();
+        Chat chat = message.getChat();
+        switch (commandText) {
+            case Commands.QUIZ: {
+                commandService.quiz(chat, fromUser);
+                break;
+            }
+            case Commands.QUIT: {
+                commandService.quit(chat, fromUser);
+                break;
+            }
+            case Commands.NEXT: {
+                commandService.next(chat, fromUser);
+                break;
+            }
+            case Commands.ANSWER: {
+                commandService.answer(chat, fromUser);
+                break;
+            }
+            case Commands.HELP: {
+                commandService.help(chat, fromUser);
+                break;
+            }
+            default: {
+                commandService.unknown(chat, fromUser);
+                break;
+            }
+        }
+    }
+
+    private void translateWordFromMessageForUser(Message message) {
         String text = message.getText();
         Chat chat = message.getChat();
         int chatId = chat.getId();
         String chatType = chat.getType();
         String username = message.getFrom().getUsername();
         if (Objects.equals(chatType, "private")) {
-            messageApiResult.setResult(answerService.translateWordForPrivateTgUser(chatId, text, username));
+            answerService.translateWordForPrivateTgUser(chatId, text, username);
         } else {
-            messageApiResult.setResult(answerService.translateWordForPublic(chatId, text));
+            answerService.translateWordForPublic(chatId, text);
         }
-        messageApiResult.setOk(messageApiResult.getResult() != null);
-        return messageApiResult;
     }
 }
